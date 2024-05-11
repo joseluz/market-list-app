@@ -5,100 +5,76 @@
  * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {  SafeAreaView,  ScrollView,  StatusBar,  StyleSheet,  Text,  useColorScheme,View} from 'react-native';
-import {  Colors,  DebugInstructions,  Header,  LearnMoreLinks,ReloadInstructions,} from 'react-native/Libraries/NewAppScreen';
+import React, { useState } from 'react';
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View, FlatList } from 'react-native';
+import { Colors, DebugInstructions, Header, LearnMoreLinks, ReloadInstructions, } from 'react-native/Libraries/NewAppScreen';
 import AppHeader from './app/ui/components/AppHeader';
+import { Section } from './app/model/section';
+import ToBuyNode from './app/ui/components/ToBuyNode';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+export default function App(): React.JSX.Element {
+	const isDarkMode = useColorScheme() === 'dark';
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
+	const backgroundStyle = {
+		backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+	};
+
+	const [sections, setSection] = useState([
+		new Section({ key: '1', name: 'Peteca' }),
+		new Section({ key: '2', name: 'Bolinha' })
+	]);
+
+	const [completedSections, setCompletedSections] = useState([
+		new Section({ key: '3', name: 'Raquete' })
+	]);
+
+	const markAsComplete = (key: string) => {
+		const item = sections.find(s => s.key == key);
+		setCompletedSections((allSections) => {
+			allSections.push(item);
+			return allSections;
+		});
+		setSection((allItems) => {
+			return allItems.filter(s => s.key != key);
+		})
+	};
+
+	const markAsUncomplete = (key: string) => {
+		const item = completedSections.find(s => s.key == key);
+		setSection((allSections) => {
+			return allSections.push(item);
+		});
+		setCompletedSections((allItems) => {
+			return allItems.filter(s => s.key != key);
+		})
+	};
+
+	return (
+		<SafeAreaView style={backgroundStyle}>
+			<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+				backgroundColor={backgroundStyle.backgroundColor}>
+			</StatusBar>
+			<AppHeader />
+			<View className="py-2 px-4 mt-2">
+				<Text className="text-bold text-xl">Lista do dia {new Date().getDate()}/{new Date().getMonth()}</Text>
+			</View>
+			{/* <ScrollView contentInsetAdjustmentBehavior="automatic"
+				style={backgroundStyle}> */}
+				<View className='px-10 py-5 bg-white'>
+					<FlatList data={sections}
+						renderItem={({ item }) => (
+							<ToBuyNode item={item} onComplete={markAsComplete}></ToBuyNode>
+						)}
+					/>
+				</View>
+				<View className='px-10 py-5 bg-green-100'>
+					<FlatList data={completedSections}
+						renderItem={({ item }) => (
+							<ToBuyNode item={item} onComplete={markAsUncomplete}></ToBuyNode>
+						)}
+					/>
+				</View>
+			{/* </ScrollView> */}
+		</SafeAreaView>
+	);
 }
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <AppHeader />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One!">
-            I just edited <Text style={styles.highlight}>App.tsx</Text> right now.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
-
-export default App;

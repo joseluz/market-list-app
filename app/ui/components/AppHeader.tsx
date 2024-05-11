@@ -1,18 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 export default function AppHeader():  React.JSX.Element {
   return (
-    <View>
-      <Text style={styles.header}>Peteca2</Text>
+    <View className="bg-violet-500 px-10 py-4 flex items-center">
+      <Text className="font-bold text-[30] color-white text-xl">Lista de Compra</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  header:{
-    fontWeight:'bold',
-    fontSize:25,
-    color: 'coral',
-  }
-})
