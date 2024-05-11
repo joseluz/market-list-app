@@ -25,13 +25,14 @@ export default function App(): React.JSX.Element {
 	]);
 
 	const [completedSections, setCompletedSections] = useState([
-		new Section({ key: '3', name: 'Raquete' })
+		new Section({ key: '3', name: 'Raquete', isCompleted: true })
 	]);
 
 	const markAsComplete = (key: string) => {
 		const item = sections.find(s => s.key == key);
 		setCompletedSections((allSections) => {
 			allSections.push(item);
+			item.isCompleted = true;
 			return allSections;
 		});
 		setSection((allItems) => {
@@ -42,7 +43,9 @@ export default function App(): React.JSX.Element {
 	const markAsUncomplete = (key: string) => {
 		const item = completedSections.find(s => s.key == key);
 		setSection((allSections) => {
-			return allSections.push(item);
+			allSections.push(item);
+			item.isCompleted = false;
+			return allSections;
 		});
 		setCompletedSections((allItems) => {
 			return allItems.filter(s => s.key != key);
@@ -60,20 +63,25 @@ export default function App(): React.JSX.Element {
 			</View>
 			{/* <ScrollView contentInsetAdjustmentBehavior="automatic"
 				style={backgroundStyle}> */}
-				<View className='px-10 py-5 bg-white'>
-					<FlatList data={sections}
-						renderItem={({ item }) => (
-							<ToBuyNode item={item} onComplete={markAsComplete}></ToBuyNode>
-						)}
-					/>
-				</View>
-				<View className='px-10 py-5 bg-green-100'>
-					<FlatList data={completedSections}
-						renderItem={({ item }) => (
-							<ToBuyNode item={item} onComplete={markAsUncomplete}></ToBuyNode>
-						)}
-					/>
-				</View>
+			<View className='px-10 py-5 bg-white'>
+				<FlatList data={sections}
+					renderItem={({ item }) => (
+						<ToBuyNode item={item}
+							onComplete={markAsComplete}></ToBuyNode>
+					)}
+				/>
+			</View>
+			<View className='px-10 py-5 bg-green-100 flex gap-2'>
+				<Text className="font-medium text-lg">Completados</Text>
+				<FlatList data={completedSections}
+					renderItem={({ item }) => (
+						<View className="opacity-60">
+							<ToBuyNode item={item}
+								onComplete={markAsUncomplete}></ToBuyNode>
+						</View>
+					)}
+				/>
+			</View>
 			{/* </ScrollView> */}
 		</SafeAreaView>
 	);
