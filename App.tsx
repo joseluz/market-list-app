@@ -21,18 +21,18 @@ export default function App(): React.JSX.Element {
 	};
 
 	const [sections, setSection] = useState([
-		new Section({ key: '1', name: 'Peteca' }),
-		new Section({ key: '3', name: 'Peteca' }),
-		new Section({ key: '4', name: 'Peteca' }),
-		new Section({ key: '5', name: 'Peteca' }),
-		new Section({ key: '6', name: 'Peteca' }),
-		new Section({ key: '7', name: 'Peteca' }),
-		new Section({ key: '8', name: 'Peteca' }),
+		new Section({ key: '1', name: 'Peteca1' }),
+		new Section({ key: '3', name: 'Peteca2' }),
+		new Section({ key: '4', name: 'Peteca3' }),
+		new Section({ key: '5', name: 'Peteca4' }),
+		new Section({ key: '6', name: 'Peteca5' }),
+		new Section({ key: '7', name: 'Peteca6' }),
+		new Section({ key: '8', name: 'Peteca7' }),
 		new Section({ key: '2', name: 'Bolinha' })
 	]);
 
 	const [completedSections, setCompletedSections] = useState([
-		new Section({ key: '3', name: 'Raquete', isCompleted: true })
+		new Section({ key: '9', name: 'Raquete', isCompleted: true })
 	]);
 
 	const markAsComplete = (key: string) => {
@@ -66,29 +66,33 @@ export default function App(): React.JSX.Element {
 					backgroundColor={backgroundStyle.backgroundColor}>
 				</StatusBar>
 				<AppHeader />
-				<View className='text-gray-500 overflow-y-auto'>
+				<View className='text-gray-500 100vh'>
 					<View className="py-2 px-4 mt-2 flex flex-row justify-between">
 						<Text className="text-xl">Lista do dia {new Date().getDate()}/{new Date().getMonth()}</Text>
 						<Text className="font-bold text-xl">{completedSections.length}/{completedSections.length + sections.length}</Text>
 					</View>
-					<View className='px-10 py-5 bg-white'>
-						<FlatList data={sections}
-							renderItem={({ item }) => (
-								<ToBuyNode item={item}
-									onComplete={markAsComplete}></ToBuyNode>
-							)}
-						/>
-					</View>
-					<View className='px-10 py-5 bg-green-100 flex gap-2'>
-						<Text className="font-medium text-lg">Completados</Text>
-						<FlatList data={completedSections}
-							renderItem={({ item }) => (
-								<View className="opacity-60">
-									<ToBuyNode item={item}
-										onComplete={markAsUncomplete}></ToBuyNode>
-								</View>
-							)}
-						/>
+					<View>
+						<View className='py-5 bg-white'>
+							<FlatList data={sections}
+								renderItem={({ item }) => (
+									<View className='px-10'>
+										<ToBuyNode item={item}
+											onComplete={markAsComplete}></ToBuyNode>
+									</View>
+								)}
+							/>
+						</View>
+						<View className='px-10 py-5 bg-green-100 flex gap-2'>
+							<Text className="font-medium text-lg">Completados</Text>
+							<FlatList data={completedSections}
+								renderItem={({ item }) => (
+									<View className="opacity-60">
+										<ToBuyNode item={item}
+											onComplete={markAsUncomplete}></ToBuyNode>
+									</View>
+								)}
+							/>
+						</View>
 					</View>
 				</View>
 				<Footer></Footer>
